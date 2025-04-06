@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, watch, ref} from "vue";
+import { onMounted, watch, ref } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { usePoiStore, useGeoStore } from "@/stores";
@@ -10,16 +10,15 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-})
+});
 const geoStore = useGeoStore();
 const poiStore = usePoiStore();
 const url = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
 
-
 let map;
 let poiMarker;
 let routingControl = null;
-let userLocation = ref({latitude: null, longitude: null});
+let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
 
 const redIcon = L.icon({
@@ -41,7 +40,7 @@ function drawRadiusCircle(lat, lng) {
     fillColor: "#ff9900",
     fillOpacity: 0.2,
     radius: props.radius, // Dynamischer Radius
-    weight: 1
+    weight: 1,
   }).addTo(map);
 }
 
@@ -54,11 +53,15 @@ function setMapAndRadius(lat, lon) {
 }
 
 function handleFallback() {
-  const useFallback = window.confirm("Deine Standortbestimmung ist nicht möglich. Möchtest du zufällige Koordinaten verwenden?");
+  const useFallback = window.confirm(
+    "Deine Standortbestimmung ist nicht möglich. Möchtest du zufällige Koordinaten verwenden?"
+  );
   if (useFallback) {
-    userLocation.value = geoStore.generateFallbackCoordinates()
-    console.log(`📍 Zufällige Nutzerposition: lat=${userLocation.value.latitude}, lon=${userLocation.value.longitude}`);
-    setMapAndRadius(userLocation.value.latitude, userLocation.value.longitude)
+    userLocation.value = geoStore.generateFallbackCoordinates();
+    console.log(
+      `📍 Zufällige Nutzerposition: lat=${userLocation.value.latitude}, lon=${userLocation.value.longitude}`
+    );
+    setMapAndRadius(userLocation.value.latitude, userLocation.value.longitude);
   }
 }
 
@@ -70,19 +73,33 @@ onMounted(() => {
     attribution: "&copy; Wikimedia contributors",
   }).addTo(map);
 
+  // Let the DOM settle, then fix map rendering
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 100);
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-          userLocation.value.latitude = position.coords.latitude;
-          userLocation.value.longitude = position.coords.longitude;
-          console.log(`📍 Nutzerposition: lat=${userLocation.value.latitude}, lon=${userLocation.value.longitude}`);
-          setMapAndRadius(userLocation.value.latitude, userLocation.value.longitude)
-        },
-        (error) => {
-          console.error("Fehler beim Abrufen der Position:", error.code, error.message);
-          handleFallback();
-        }
-    )
+      (position) => {
+        userLocation.value.latitude = position.coords.latitude;
+        userLocation.value.longitude = position.coords.longitude;
+        console.log(
+          `📍 Nutzerposition: lat=${userLocation.value.latitude}, lon=${userLocation.value.longitude}`
+        );
+        setMapAndRadius(
+          userLocation.value.latitude,
+          userLocation.value.longitude
+        );
+      },
+      (error) => {
+        console.error(
+          "Fehler beim Abrufen der Position:",
+          error.code,
+          error.message
+        );
+        handleFallback();
+      }
+    );
   } else {
     console.error("Geolocation wird nicht unterstützt");
     handleFallback();
@@ -97,45 +114,53 @@ function removeRouting() {
 }
 
 watch(
-    () => poiStore.poi,
-    () => {
-      console.log("Watcher ausgelöst", poiStore.poi);
+  () => poiStore.poi,
+  () => {
+    console.log("Watcher ausgelöst", poiStore.poi);
 
-      if (poiMarker) {
-        map.removeLayer(poiMarker);
-      }
+    if (poiMarker) {
+      map.removeLayer(poiMarker);
+    }
 
-      poiMarker = L.marker([poiStore.poi.latitude, poiStore.poi.longitude], {icon: redIcon})
-          .addTo(map)
-          .bindPopup(poiStore.poi.title)
-          .openPopup();
+    poiMarker = L.marker([poiStore.poi.latitude, poiStore.poi.longitude], {
+      icon: redIcon,
+    })
+      .addTo(map)
+      .bindPopup(poiStore.poi.title)
+      .openPopup();
 
-      map.setView([poiStore.poi.latitude, poiStore.poi.longitude], 15);
+    map.setView([poiStore.poi.latitude, poiStore.poi.longitude], 15);
 
-      if (userLocation.value.latitude !== null && userLocation.value.longitude !== null) {
-        removeRouting();
+    if (
+      userLocation.value.latitude !== null &&
+      userLocation.value.longitude !== null
+    ) {
+      removeRouting();
 
-        routingControl = L.Routing.control({
-          waypoints: [
-            L.latLng(userLocation.value.latitude, userLocation.value.longitude),
-            L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
-          ],
-          routeWhileDragging: true,
-        }).addTo(map);
+      routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(userLocation.value.latitude, userLocation.value.longitude),
+          L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
+        ],
+        routeWhileDragging: true,
+      }).addTo(map);
 
-        routingControl.getContainer().style.display = 'none';
-      }
-    },
-    {deep: true}
+      routingControl.getContainer().style.display = "none";
+    }
+  },
+  { deep: true }
 );
 
 watch(
-    () => props.radius,
-    () => {
-      if (userLocation.value.latitude && userLocation.value.longitude) {
-        drawRadiusCircle(userLocation.value.latitude, userLocation.value.longitude);
-      }
+  () => props.radius,
+  () => {
+    if (userLocation.value.latitude && userLocation.value.longitude) {
+      drawRadiusCircle(
+        userLocation.value.latitude,
+        userLocation.value.longitude
+      );
     }
+  }
 );
 </script>
 
