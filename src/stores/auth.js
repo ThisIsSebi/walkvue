@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
         }
         ,
         login(username, password) {
-            axios.post("http://localhost:8080/api/auth/login", {
+            axios.post("https://walkspring-cuh1.onrender.com:8080/api/auth/login", {
                 username: username,
                 password: password
             })
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('role');
         },
         getAllUsers() {
-            axios.get("http://localhost:8080/api/auth/allUsers")
+            axios.get("https://walkspring-cuh1.onrender.com:8080/api/auth/allUsers")
                 .then(response => {
                     const data = response.data;
                     console.log("Empfangene Daten:", data); // Debugging
@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', {
         deleteUser(userId) {
             console.log(userId);
 
-            axios.delete(`http://localhost:8080/api/auth/deleteUser/${userId}`)
+            axios.delete(`https://walkspring-cuh1.onrender.com:8080/api/auth/deleteUser/${userId}`)
                 .then(response => {
                     console.log("Benutzer erfolgreich gelöscht:", response.data);
 
@@ -123,7 +123,7 @@ export const useAuthStore = defineStore('auth', {
         editUser(id, updatedUser) {
             console.log(updatedUser);
 
-            axios.put(`http://localhost:8080/api/auth/editUser/${id}`, updatedUser, {
+            axios.put(`https://walkspring-cuh1.onrender.com:8080/api/auth/editUser/${id}`, updatedUser, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
