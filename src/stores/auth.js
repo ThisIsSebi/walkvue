@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
         }
         ,
         login(username, password) {
-            axios.post("https://walkspring-cuh1.onrender.com:8080/api/auth/login", {
+            axios.post("https://walkspring-cuh1.onrender.com/api/auth/login", {
                 username: username,
                 password: password
             })
