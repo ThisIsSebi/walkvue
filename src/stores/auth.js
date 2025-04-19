@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true;
             this.error = null;
 
-            return axios.post("/api/auth/register", { username, email, password }) // Return the promise
+            return axios.post("https://walkspring-cuh1.onrender.com/api/auth/register", { username, email, password }) // Return the promise
                 .then((response) => {
                     this.user = response.data;
                     console.log('Erfolgreich registriert:', this.user);
