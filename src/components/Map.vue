@@ -172,6 +172,7 @@ watch(
 
 <style scoped>
 .mapstyle {
-  height: 50vh;
+  height: 500px;
+  width: 100%;
 }
 </style>
