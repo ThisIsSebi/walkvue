@@ -50,9 +50,13 @@ function drawRadiusCircle(lat, lng) {
 
 function setMapAndRadius(lat, lon) {
   map.setView([lat, lon], 15);
-  L.marker([lat, lon]).addTo(map).openPopup();
+  L.marker([lat, lon], { icon: userIcon })
+    .addTo(map)
+    .bindPopup("Du bist hier")
+    .openPopup();
   drawRadiusCircle(lat, lon);
 }
+
 
 function handleFallback() {
   const useFallback = window.confirm(
