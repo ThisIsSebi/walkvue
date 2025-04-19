@@ -24,7 +24,7 @@ let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
 
 const redIcon = L.icon({
-  iconUrl: "/img/Standort.png", 
+  iconUrl: "img/Standort.png", 
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
