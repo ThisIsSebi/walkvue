@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { usePoiStore, useGeoStore } from "@/stores";
 import "leaflet-routing-machine";
+import StandortIcon from "@/assets/img/Standort.png";
 
 
 const props = defineProps({
@@ -23,7 +24,7 @@ let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
 
 const redIcon = L.icon({
-  iconUrl: '@/assets/img/Standort.png',
+  iconUrl: new URL(StandortIcon, import.meta.url).href,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
