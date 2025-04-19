@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://walkspring-cuh1.onrender.com:8080", // Proxy requests to your Spring Boot backend
+        target: "https://walkspring-cuh1.onrender.com", // Proxy requests to your Spring Boot backend
         changeOrigin: true,
         secure: false, // Disable SSL verification (useful for development)
       },
