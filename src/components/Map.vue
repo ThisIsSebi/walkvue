@@ -4,6 +4,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { usePoiStore, useGeoStore } from "@/stores";
 import "leaflet-routing-machine";
+import Standort from '@/assets/img/Standort.png';
+
 
 const props = defineProps({
   radius: {
@@ -13,7 +15,7 @@ const props = defineProps({
 });
 const geoStore = useGeoStore();
 const poiStore = usePoiStore();
-const url = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
+const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 let map;
 let poiMarker;
@@ -22,7 +24,7 @@ let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
 
 const redIcon = L.icon({
-  iconUrl: "src/assets/img/Standort.png",
+  iconUrl: Standort,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -70,8 +72,9 @@ onMounted(() => {
   map = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
-    attribution: "&copy; Wikimedia contributors",
-  }).addTo(map);
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  subdomains: ['a', 'b', 'c']
+}).addTo(map);
 
   // Let the DOM settle, then fix map rendering
   setTimeout(() => {

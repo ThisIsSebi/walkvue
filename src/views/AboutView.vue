@@ -6,6 +6,7 @@ import NahDranImage from '@/assets/img/NahDran.png';
 import SpeicherIhnImage from '@/assets/img/SpeicherIhn.png';
 import TeilenImage from '@/assets/img/Teilen.png';
 import Entdecken from '@/assets/img/Entdecken.png';
+
 </script>
 
 <template>
