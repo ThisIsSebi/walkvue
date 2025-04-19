@@ -13,7 +13,7 @@ const props = defineProps({
 });
 const geoStore = useGeoStore();
 const poiStore = usePoiStore();
-const url = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
+const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 let map;
 let poiMarker;
@@ -70,8 +70,10 @@ onMounted(() => {
   map = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
-    attribution: "&copy; Wikimedia contributors",
-  }).addTo(map);
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  subdomains: ['a', 'b', 'c']
+}).addTo(map);
+
 
   // Let the DOM settle, then fix map rendering
   setTimeout(() => {
