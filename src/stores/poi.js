@@ -12,7 +12,7 @@ export const usePoiStore = defineStore('poi', {
     }),
     actions: {
         loadPoi(lat, lon, radius = 200) {
-            return axios.get('/api/random', {
+            return axios.get('https://walkspring-cuh1.onrender.com/api/random', {
                 params: {
                     lat: lat,
                     lon: lon,
