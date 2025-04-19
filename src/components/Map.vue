@@ -22,6 +22,14 @@ let poiMarker;
 let routingControl = null;
 let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
+let userMarker;
+
+const userIcon = L.icon({
+  iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
 
 const redIcon = L.icon({
   iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
@@ -50,10 +58,17 @@ function drawRadiusCircle(lat, lng) {
 
 function setMapAndRadius(lat, lon) {
   map.setView([lat, lon], 15);
-  L.marker([lat, lon], { icon: userIcon })
+
+  // Remove old marker if it exists
+  if (userMarker) {
+    map.removeLayer(userMarker);
+  }
+
+  userMarker = L.marker([lat, lon], { icon: userIcon })
     .addTo(map)
     .bindPopup("Du bist hier")
     .openPopup();
+
   drawRadiusCircle(lat, lon);
 }
 
