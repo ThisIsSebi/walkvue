@@ -24,7 +24,7 @@ let userLocation = ref({ latitude: null, longitude: null });
 let radiusCircle = null;
 
 const redIcon = L.icon({
-  iconUrl: StandortIcon ? new URL(StandortIcon, import.meta.url).href : "https://via.placeholder.com/25x41.png",
+  iconUrl: StandortIcon, 
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
