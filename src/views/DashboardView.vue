@@ -125,7 +125,7 @@ function cancelWindow(){
     </v-row>
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <div id="map" class="mapstyle"></div>
+        <div id="map" class="mapstyle" style="height: 500px; width: 100%; margin: 20px auto;"></div>
 
       </v-col>
     </v-row>
