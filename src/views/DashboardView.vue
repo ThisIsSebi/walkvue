@@ -11,7 +11,7 @@ const pictureStore = usePictureStore();
 const poiStore = usePoiStore();
 const map = ref(null);
 const userLocation = ref({ latitude: null, longitude: null });
-const url = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
+const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const checkInStore = useCheckInStore();
 
 console.log(poiStore.poi);
@@ -31,8 +31,9 @@ function mapLoader(){
   map.value = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
-    attribution: "&copy; Wikimedia contributors",
-  }).addTo(map.value);
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  subdomains: ['a', 'b', 'c']
+}).addTo(map);
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
