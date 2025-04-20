@@ -160,12 +160,17 @@ watch(
       removeRouting();
 
       routingControl = L.Routing.control({
-        waypoints: [
-          L.latLng(userLocation.value.latitude, userLocation.value.longitude),
-          L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
-        ],
-        routeWhileDragging: true,
-      }).addTo(map);
+  waypoints: [
+    L.latLng(userLocation.value.latitude, userLocation.value.longitude),
+    L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
+  ],
+  routeWhileDragging: true,
+  createMarker: function (i, wp) {
+    return L.marker(wp.latLng, {
+      icon: i === 0 ? userIcon : redIcon,
+    });
+  },
+}).addTo(map);
 
       routingControl.getContainer().style.display = "none";
     }
