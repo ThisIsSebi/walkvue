@@ -16,10 +16,12 @@ const checkInStore = useCheckInStore();
 
 console.log(poiStore.poi);
 
-onMounted(() => {
+onMounted(async () => {
   checkInStore.getCheckinsByUser();
-  mapLoader();
-
+  await nextTick();
+  setTimeout(() => {
+    mapLoader();
+  }, 200);
 });
 
 function mapLoader(){
@@ -34,6 +36,10 @@ function mapLoader(){
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   subdomains: ['a', 'b', 'c']
 }).addTo(map);
+
+setTimeout(() => {
+    map.value.invalidateSize();
+  }, 100);
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -223,9 +229,9 @@ function cancelWindow(){
 }
 
 .mapstyle {
-  height: 500px;  /* oder eine andere Höhe, die dir passt */
+  height: 500px;
+  min-height: 300px;
   width: 100%;
-  border-radius: 20px;
 }
 .d-none {
   display: none;
