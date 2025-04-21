@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import {usePictureStore} from "@/stores/picture.js";
 import DashboardCarousel from "@/views/DashboardCarousel.vue";
+import { nextTick } from "vue";
 
 const pictureStore = usePictureStore();
 const poiStore = usePoiStore();
