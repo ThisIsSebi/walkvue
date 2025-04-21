@@ -89,18 +89,19 @@ setTimeout(() => {
 watch(
     () => checkInStore.checkins,
     () => {
-      if (!map.value) return;
+      mapLoader(); 
 
-      checkInStore.checkins.forEach((checkin) => {
-        console.log(checkInStore.checkins)
-        L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
-            .addTo(map.value)
-            .bindPopup(checkin.checkinPoi.poiTitle)
-            .openPopup();
-      });
-      mapLoader();
-    },
-    { deep: true }
+    //    checkInStore.checkins.forEach((checkin) => {
+    //   const poi = checkin.checkinPoi;
+    //   if (poi && poi.latitude && poi.longitude) {
+    //     L.marker([poi.latitude, poi.longitude])
+    //       .addTo(map.value)
+    //       .bindPopup(poi.poiTitle)
+    //       .openPopup();
+    //   }
+    // });
+  },
+  { deep: true }
 );
 
 function onFileChanged(event) {
