@@ -17,15 +17,20 @@ const checkInStore = useCheckInStore();
 
 console.log(poiStore.poi);
 
-onMounted(async () => {
+onMounted(() => {
   checkInStore.getCheckinsByUser();
-  await nextTick();
-  setTimeout(() => {
+  nextTick(() => {
     mapLoader();
-  }, 200);
+  });
 });
 
 function mapLoader(){
+
+  const mapElement = document.getElementById("map");
+  if (!mapElement) {
+    console.warn("🛑 Map container not found!");
+    return;
+  }
 
   if (map.value){
     map.value.remove();
@@ -60,13 +65,25 @@ setTimeout(() => {
   } else {
     console.error("Geolocation wird nicht unterstützt");
   }
-  checkInStore.checkins.forEach((checkin) => {
-    if (checkin.checkinPoi) {
-      L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
+
+  if (map.value && typeof map.value.addLayer === "function") {
+    checkInStore.checkins.forEach((checkin) => {
+      if (checkin.checkinPoi) {
+        L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
           .addTo(map.value)
           .bindPopup(checkin.checkinPoi.poiTitle);
-    }
-  });
+      }
+    });
+  } else {
+    console.warn("🚫 map.value is not a valid Leaflet map instance");
+  }
+  // checkInStore.checkins.forEach((checkin) => {
+  //   if (checkin.checkinPoi) {
+  //     L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
+  //         .addTo(map.value)
+  //         .bindPopup(checkin.checkinPoi.poiTitle);
+  //   }
+  // });
 }
 
 watch(
