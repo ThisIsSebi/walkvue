@@ -1,37 +1,31 @@
 <script setup>
-import {
-  usePoiStore,
-  useCheckInStore,
-  useAuthStore,
-  useGeoStore,
-} from "@/stores";
-import { onMounted, ref, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
+import { usePoiStore, useCheckInStore, useAuthStore, useGeoStore } from "@/stores";
 import { usePictureStore } from "@/stores/picture.js";
 import DashboardCarousel from "@/views/DashboardCarousel.vue";
-import { nextTick } from "vue";
 
-const pictureStore = usePictureStore();
 const poiStore = usePoiStore();
-const map = ref(null);
-const userLocation = ref({ latitude: null, longitude: null });
-const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const checkInStore = useCheckInStore();
+const pictureStore = usePictureStore();
 
-console.log(poiStore.poi);
+const map = ref(null);
+const markers = ref([]);
+const userLocation = ref({ latitude: null, longitude: null });
+
+const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 onMounted(async () => {
-  await nextTick();
-  checkInStore.getCheckinsByUser();
-  mapLoader();
+  await checkInStore.getCheckinsByUser();
+  nextTick(() => {
+    initMap();
+  });
 });
 
-function mapLoader() {
+function initMap() {
   const mapElement = document.getElementById("map");
-  console.log("🧪 Map element:", mapElement);
-  console.log("🧪 mapElement offsetHeight:", mapElement?.offsetHeight);
   if (!mapElement) {
     console.warn("🛑 Map container not found!");
     return;
@@ -41,118 +35,109 @@ function mapLoader() {
     map.value.remove();
     map.value = null;
   }
+
   map.value = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     subdomains: ["a", "b", "c"],
-  }).addTo(map);
+  }).addTo(map.value);
 
   setTimeout(() => {
     map.value.invalidateSize();
-  }, 300);
+  }, 100);
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         userLocation.value.latitude = position.coords.latitude;
         userLocation.value.longitude = position.coords.longitude;
-        map.value.setView(
-          [userLocation.value.latitude, userLocation.value.longitude],
-          15
-        );
-        L.marker([userLocation.value.latitude, userLocation.value.longitude])
+
+        const { latitude, longitude } = userLocation.value;
+        map.value.setView([latitude, longitude], 15);
+        L.marker([latitude, longitude])
           .addTo(map.value)
           .bindPopup("Ihr Standort")
           .openPopup();
+
+        addCheckinMarkers();
       },
       (error) => {
-        console.error(
-          "Fehler beim Abrufen der Position:",
-          error.code,
-          error.message
-        );
+        console.error("Fehler beim Abrufen der Position:", error.code, error.message);
+        addCheckinMarkers(); // Still add checkins
       }
     );
   } else {
     console.error("Geolocation wird nicht unterstützt");
+    addCheckinMarkers(); // Still add checkins
+  }
+}
+
+function addCheckinMarkers() {
+  if (!map.value || typeof map.value.addLayer !== "function") {
+    console.warn("🚫 map.value is not a valid Leaflet map instance");
+    return;
   }
 
-  if (map.value && typeof map.value.addLayer === "function") {
-    checkInStore.checkins.forEach((checkin) => {
-      if (checkin.checkinPoi) {
-        L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
-          .addTo(map.value)
-          .bindPopup(checkin.checkinPoi.poiTitle);
-      }
-    });
-  } else {
-    console.warn("🚫 map.value is not a valid Leaflet map instance");
-  }
-  // checkInStore.checkins.forEach((checkin) => {
-  //   if (checkin.checkinPoi) {
-  //     L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
-  //         .addTo(map.value)
-  //         .bindPopup(checkin.checkinPoi.poiTitle);
-  //   }
-  // });
+  // Remove existing markers first
+  markers.value.forEach((m) => map.value.removeLayer(m));
+  markers.value = [];
+
+  checkInStore.checkins.forEach((checkin) => {
+    if (checkin.checkinPoi) {
+      const marker = L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
+        .addTo(map.value)
+        .bindPopup(checkin.checkinPoi.poiTitle);
+      markers.value.push(marker);
+    }
+  });
 }
 
 watch(
   () => checkInStore.checkins,
   () => {
-    mapLoader();
-
-    //    checkInStore.checkins.forEach((checkin) => {
-    //   const poi = checkin.checkinPoi;
-    //   if (poi && poi.latitude && poi.longitude) {
-    //     L.marker([poi.latitude, poi.longitude])
-    //       .addTo(map.value)
-    //       .bindPopup(poi.poiTitle)
-    //       .openPopup();
-    //   }
-    // });
+    if (map.value && typeof map.value.addLayer === "function") {
+      addCheckinMarkers();
+    }
   },
   { deep: true }
 );
 
-function onFileChanged(event) {
-  file.value = event.target.files[0];
-}
+// === Picture Upload + Dialog Handling ===
 
 const file = ref(null);
 const fileInput = ref(null);
 const dialogVisible = ref(false);
 const checkinToEdit = ref();
 
+function onFileChanged(event) {
+  file.value = event.target.files[0];
+}
+
 async function submitFileInput() {
+  if (!file.value || !checkinToEdit.value) return;
   const formData = new FormData();
   formData.append("file", file.value);
-  console.log(formData);
-  pictureStore.uploadPicture(formData, checkinToEdit.value.checkinPoi.poiId);
-
-  //cancelWindow();
-  //window.location.reload();
-  console.log("Picturestore:" + pictureStore.pictures);
+  await pictureStore.uploadPicture(formData, checkinToEdit.value.checkinPoi.poiId);
+  cancelWindow();
 }
 
 function openUploadDialog(checkin) {
   checkinToEdit.value = checkin;
-  console.log(checkinToEdit.value);
   dialogVisible.value = true;
+}
+
+function cancelWindow() {
+  if (fileInput.value) fileInput.value.value = null;
+  dialogVisible.value = false;
 }
 
 function handleDelete(id) {
   checkInStore.deleteCheckin(id);
   window.location.reload();
 }
-
-function cancelWindow() {
-  fileInput.value.value = null; // Setzt das Datei-Input zurück
-  dialogVisible.value = false; // Schließt das Dialog
-}
 </script>
+
 
 <template>
   <v-container>
