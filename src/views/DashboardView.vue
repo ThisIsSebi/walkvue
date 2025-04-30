@@ -32,9 +32,9 @@ function mapLoader(){
     return;
   }
 
-  if (map.value){
-    map.value.remove();
-    map.value = null;
+  if (map){
+    map.remove();
+    map = null;
   }
   map.value = L.map("map").setView([48.184606, 16.420382], 15);
 
@@ -44,7 +44,7 @@ function mapLoader(){
 }).addTo(map);
 
 setTimeout(() => {
-    map.value.invalidateSize();
+    map.invalidateSize();
   }, 100);
 
   if (navigator.geolocation) {
@@ -54,7 +54,7 @@ setTimeout(() => {
           userLocation.value.longitude = position.coords.longitude;
           map.value.setView([userLocation.value.latitude, userLocation.value.longitude], 15);
           L.marker([userLocation.value.latitude, userLocation.value.longitude])
-              .addTo(map.value)
+              .addTo(map)
               .bindPopup("Ihr Standort")
               .openPopup();
         },
