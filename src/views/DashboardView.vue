@@ -36,7 +36,7 @@ function mapLoader(){
     map.remove();
     map = null;
   }
-  map.value = L.map("map").setView([48.184606, 16.420382], 15);
+  map = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
