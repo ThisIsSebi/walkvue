@@ -52,7 +52,7 @@ setTimeout(() => {
         (position) => {
           userLocation.value.latitude = position.coords.latitude;
           userLocation.value.longitude = position.coords.longitude;
-          map([userLocation.value.latitude, userLocation.value.longitude], 15);
+          map.setView([userLocation.value.latitude, userLocation.value.longitude], 15);
           L.marker([userLocation.value.latitude, userLocation.value.longitude])
               .addTo(map)
               .bindPopup("Ihr Standort")
