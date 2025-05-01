@@ -198,7 +198,7 @@ function cancelWindow(){
                     <v-btn color="primary" @click.stop="handleDelete(checkin.checkinPoi.poiId)" class="mb-2 mb-md-0">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
-                    <v-btn color="secondary"  @click="openUploadDialog(checkin)" class="ml-1 mb-2 mb-md-0">
+                    <v-btn color="secondary"  @click.stop="openUploadDialog(checkin)" class="ml-1 mb-2 mb-md-0">
                       <v-icon>mdi-camera</v-icon>
                     </v-btn>
                   </v-col>
