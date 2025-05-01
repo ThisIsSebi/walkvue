@@ -50,26 +50,6 @@ function mapLoader() {
     return;
   }
 
-  if (!map) return;
-
-// Alle Marker entfernen
-map.eachLayer(layer => {
-  if (layer instanceof L.Marker) {
-    map.removeLayer(layer);
-  }
-});
-
-// Die POIs erneut hinzufügen
-checkInStore.checkins.forEach((checkin) => {
-  if (checkin.checkinPoi) {
-    L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude], {
-      icon: redIcon,
-    })
-      .addTo(map)
-      .bindPopup(checkin.checkinPoi.poiTitle);
-  }
-});
-
   if (map) {
     map.remove();
     map = null;
