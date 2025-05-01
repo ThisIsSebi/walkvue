@@ -192,7 +192,9 @@ function cancelWindow(){
               <v-list-item v-for="checkin in checkInStore.checkins"> <!-- ALT: v-for="(checkin, index) in checkInStore.checkins" :key="index"> -->
                 <v-row class="d-flex align-center">
                   <v-col class="d-flex" style="flex-grow: 1; width: 100%;">
-                    <RouterLink :to="'/checkin/' + checkin.checkinPoi.poiId" class="checkInPOITitle">{{checkin.checkinPoi.poiTitle}}</RouterLink>
+                    <RouterLink :to="'/checkin/' + checkin.checkinPoi.poiId" class="checkInPOITitle" @click.stop>
+                      {{checkin.checkinPoi.poiTitle}}
+                    </RouterLink>
                   </v-col>
                   <v-col cols="auto" class="d-flex justify-start button-group">
                     <v-btn color="primary" @click.stop="handleDelete(checkin.checkinPoi.poiId)" class="mb-2 mb-md-0">
