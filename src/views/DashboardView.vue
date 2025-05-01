@@ -151,7 +151,8 @@ function openUploadDialog(checkin){
 
 async function handleDelete(id){
   await checkInStore.deleteCheckin(id); // warte, bis gelöscht
-  await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
+  // await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
+  checkInStore.checkins = checkInStore.checkins.filter(c => c.checkinId !== id);
 }
 
 function cancelWindow(){
