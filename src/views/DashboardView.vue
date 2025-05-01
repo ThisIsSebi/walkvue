@@ -15,6 +15,20 @@ const userLocation = ref({ latitude: null, longitude: null });
 const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const checkInStore = useCheckInStore();
 
+const userIcon = L.icon({
+  iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+const redIcon = L.icon({
+  iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
 console.log(poiStore.poi);
 
 onMounted(() => {
@@ -53,7 +67,9 @@ setTimeout(() => {
           userLocation.value.latitude = position.coords.latitude;
           userLocation.value.longitude = position.coords.longitude;
           map.setView([userLocation.value.latitude, userLocation.value.longitude], 15);
-          L.marker([userLocation.value.latitude, userLocation.value.longitude])
+          L.marker([userLocation.value.latitude, userLocation.value.longitude], {
+            icon: userIcon,
+          })
               .addTo(map)
               .bindPopup("Ihr Standort")
               .openPopup();
@@ -69,7 +85,9 @@ setTimeout(() => {
   if (map && typeof map.addLayer === "function") {
     checkInStore.checkins.forEach((checkin) => {
       if (checkin.checkinPoi) {
-        L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
+        L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude], {
+          icon: redIcon,
+        })
           .addTo(map)
           .bindPopup(checkin.checkinPoi.poiTitle);
       }
