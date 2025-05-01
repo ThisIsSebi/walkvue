@@ -151,8 +151,8 @@ function openUploadDialog(checkin){
 
 async function handleDelete(id){
   await checkInStore.deleteCheckin(id); // warte, bis gelöscht
-  // await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
-  checkInStore.checkins = checkInStore.checkins.filter(c => c.checkinId !== id);
+  await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
+  // checkInStore.checkins = checkInStore.checkins.filter(c => c.checkinId !== id);
 }
 
 function cancelWindow(){
@@ -195,7 +195,7 @@ function cancelWindow(){
                     <RouterLink :to="'/checkin/' + checkin.checkinPoi.poiId" class="checkInPOITitle">{{checkin.checkinPoi.poiTitle}}</RouterLink>
                   </v-col>
                   <v-col cols="auto" class="d-flex justify-start button-group">
-                    <v-btn color="primary" @click="handleDelete(checkin.checkinPoi.poiId)" class="mb-2 mb-md-0">
+                    <v-btn color="primary" @click.stop="handleDelete(checkin.checkinPoi.poiId)" class="mb-2 mb-md-0">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                     <v-btn color="secondary"  @click="openUploadDialog(checkin)" class="ml-1 mb-2 mb-md-0">
