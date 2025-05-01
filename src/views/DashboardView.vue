@@ -149,9 +149,9 @@ function openUploadDialog(checkin){
   dialogVisible.value = true;
 }
 
-function handleDelete(id){
-  checkInStore.deleteCheckin(id)
-  window.location.reload();
+async function handleDelete(id){
+  await checkInStore.deleteCheckin(id); // warte, bis gelöscht
+  await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
 }
 
 function cancelWindow(){
