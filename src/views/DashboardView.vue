@@ -52,7 +52,7 @@ setTimeout(() => {
         (position) => {
           userLocation.value.latitude = position.coords.latitude;
           userLocation.value.longitude = position.coords.longitude;
-          map.setView([userLocation.value.latitude, userLocation.value.longitude], 15);
+          map([userLocation.value.latitude, userLocation.value.longitude], 15);
           L.marker([userLocation.value.latitude, userLocation.value.longitude])
               .addTo(map)
               .bindPopup("Ihr Standort")
@@ -66,11 +66,11 @@ setTimeout(() => {
     console.error("Geolocation wird nicht unterstützt");
   }
 
-  if (map.value && typeof map.value.addLayer === "function") {
+  if (map && typeof map.addLayer === "function") {
     checkInStore.checkins.forEach((checkin) => {
       if (checkin.checkinPoi) {
         L.marker([checkin.checkinPoi.latitude, checkin.checkinPoi.longitude])
-          .addTo(map.value)
+          .addTo(map)
           .bindPopup(checkin.checkinPoi.poiTitle);
       }
     });
