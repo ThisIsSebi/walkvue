@@ -12,6 +12,8 @@ import "leaflet-routing-machine";
 import { usePictureStore } from "@/stores/picture.js";
 import DashboardCarousel from "@/views/DashboardCarousel.vue";
 import { nextTick } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const pictureStore = usePictureStore();
 const poiStore = usePoiStore();
@@ -163,8 +165,15 @@ function openUploadDialog(checkin) {
 async function handleDelete(id) {
   await checkInStore.deleteCheckin(id); // warte, bis gelöscht
   //await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
-  router.push("/dashboard");
-  // checkInStore.checkins = checkInStore.checkins.filter(c => c.checkinId !== id);
+    // Manually remove the deleted item from the store
+    checkInStore.checkins = checkInStore.checkins.filter(
+    (c) => c.checkinPoi.poiId !== id
+  );
+
+  // Optional: redirect only if user is on the detail page of the deleted checkin
+  if (router.currentRoute.value.path === `/checkin/${id}`) {
+    router.push("/dashboard");
+  }
 }
 
 function cancelWindow() {
