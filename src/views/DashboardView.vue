@@ -14,6 +14,7 @@ import DashboardCarousel from "@/views/DashboardCarousel.vue";
 import { nextTick } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
+const isDeleting = ref(false);
 
 const pictureStore = usePictureStore();
 const poiStore = usePoiStore();
@@ -163,17 +164,10 @@ function openUploadDialog(checkin) {
 }
 
 async function handleDelete(id) {
+  isDeleting.value = true;
   await checkInStore.deleteCheckin(id); // warte, bis gelöscht
-  //await checkInStore.getCheckinsByUser(); // lade aktualisierte Liste
-    // Manually remove the deleted item from the store
-    checkInStore.checkins = checkInStore.checkins.filter(
-    (c) => c.checkinPoi.poiId !== id
-  );
-
-  // Optional: redirect only if user is on the detail page of the deleted checkin
-  if (router.currentRoute.value.path === `/checkin/${id}`) {
-    router.push("/dashboard");
-  }
+  await checkInStore.getCheckinsByUser();
+  isDeleting.value = false;
 }
 
 function cancelWindow() {
@@ -227,6 +221,7 @@ function cancelWindow() {
               <v-row class="d-flex align-center">
                 <v-col class="d-flex" style="flex-grow: 1; width: 100%">
                   <RouterLink
+                    v-if="checkin.checkinPoi && !isDeleting"
                     :to="'/checkin/' + checkin.checkinPoi.poiId"
                     class="checkInPOITitle"
                     @click.stop
