@@ -219,6 +219,15 @@ function cancelWindow() {
             >
               <!-- ALT: v-for="(checkin, index) in checkInStore.checkins" :key="index"> -->
               <v-row class="d-flex align-center">
+                <v-col class="d-flex" style="flex-grow: 1; width: 100%">
+                  <!-- <RouterLink
+                    :to="'/checkin/' + checkin.checkinPoi.poiId"
+                    class="checkInPOITitle"
+                  >
+                    {{ checkin.checkinPoi.poiTitle }}
+                  </RouterLink> -->
+                  {{ checkin.checkinPoi.poiTitle }}
+                </v-col>
                 <v-col cols="auto" class="d-flex justify-start button-group">
                   <v-btn
                     color="primary"
@@ -227,14 +236,6 @@ function cancelWindow() {
                   >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
-                  <v-col class="d-flex" style="flex-grow: 1; width: 100%">
-                  <RouterLink
-                    :to="'/checkin/' + checkin.checkinPoi.poiId"
-                    class="checkInPOITitle"
-                  >
-                    {{ checkin.checkinPoi.poiTitle }}
-                  </RouterLink>
-                </v-col>
                   <v-btn
                     color="secondary"
                     @click.stop="openUploadDialog(checkin)"
