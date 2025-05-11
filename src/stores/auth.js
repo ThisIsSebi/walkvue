@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
         updatedMessage: "",
         errorMessage:""
     }),
-    // test
+    // test 2
     getters: {
         isLoggedIn: (state) => !!state.token,
         isAdmin: (state) => state.role === 'ADMIN'

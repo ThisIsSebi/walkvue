@@ -5,6 +5,7 @@ import vuetify from "vite-plugin-vuetify";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
     vueDevTools(),
