@@ -5,7 +5,7 @@ import {watch, onUnmounted, ref, computed} from 'vue';
 import {usePoiStore, useCheckInStore, useAuthStore, usePictureStore, useGeoStore} from "@/stores";
 import Drawer from "@/components/Drawer.vue";
 
-const test = process.env.test;
+const test = process.env.VUE_APP_TEST;
 
 const authStore = useAuthStore();
 const geoStore = useGeoStore();
