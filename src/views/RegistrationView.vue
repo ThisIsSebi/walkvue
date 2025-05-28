@@ -56,13 +56,13 @@ const passwordRules = [
     <v-main class="container">
       <v-container class="d-flex flex-column align-center">
         <v-form ref="form" @submit.prevent="register">
-        <v-img
+        <img
             src="./src/assets/img/Walkiepedia-Logo-Gross.png"
             lazy-src="https://example.com/placeholder.jpg"
             width="300px"
             height="200px"
             class="rounded-lg"
-        ></v-img>
+        ></img>
           <v-card class="mx-auto mt-4" max-width="450" title="Registrierung">
             <v-container>
               <v-text-field

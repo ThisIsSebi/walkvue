@@ -29,12 +29,12 @@ import router from "@/router/index.js";
     <v-main>
       <v-form @submit.prevent="login">
         <v-container class="containerLogin">
-          <v-img
+          <img
               class="mx-auto"
               width="300px"
               height="200px"
               src="../assets/img/Walkiepedia-Logo-Gross.png"
-          ></v-img>
+          ></img>
         </v-container>
         <v-card class="mx-auto" max-width="250" title="Login">
           <v-container>
