@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net',
+    baseURL: 'https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net',
     headers: {
         'Content-Type': 'application/json'
     }

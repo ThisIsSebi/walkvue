@@ -143,7 +143,7 @@ export const useAuthStore = defineStore("auth", {
 
       axios
         .put(
-          `walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/editUser/${id}`,
+          `https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/editUser/${id}`,
           updatedUser,
           {
             headers: {
