@@ -25,7 +25,7 @@ export const useAuthStore = defineStore("auth", {
 
       return axios
         .post(
-          "walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/register",
+          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/register",
           { username, email, password }
         ) // Return the promise
         .then((response) => {
@@ -55,7 +55,7 @@ export const useAuthStore = defineStore("auth", {
     login(username, password) {
       axios
         .post(
-          "walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/login",
+          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/login",
           {
             username: username,
             password: password,
@@ -99,7 +99,7 @@ export const useAuthStore = defineStore("auth", {
     getAllUsers() {
       axios
         .get(
-          "walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/allUsers"
+          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/allUsers"
         )
         .then((response) => {
           const data = response.data;
@@ -121,7 +121,7 @@ export const useAuthStore = defineStore("auth", {
 
       axios
         .delete(
-          `walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/deleteUser/${userId}`
+          `https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/deleteUser/${userId}`
         )
         .then((response) => {
           console.log("Benutzer erfolgreich gelöscht:", response.data);
