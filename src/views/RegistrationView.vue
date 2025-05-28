@@ -57,7 +57,7 @@ const passwordRules = [
       <v-container class="d-flex flex-column align-center">
         <v-form ref="form" @submit.prevent="register">
         <img
-            src="./src/assets/img/Walkiepedia-Logo-Gross.png"
+            src="../assets/img/Walkiepedia-Logo-Gross.png"
             lazy-src="https://example.com/placeholder.jpg"
             width="300px"
             height="200px"
