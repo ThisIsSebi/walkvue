@@ -33,7 +33,7 @@ import router from "@/router/index.js";
               class="mx-auto"
               width="300px"
               height="200px"
-              src="./src/assets/img/Walkiepedia-Logo-Gross.png"
+              src="../assets/img/Walkiepedia-Logo-Gross.png"
           ></v-img>
         </v-container>
         <v-card class="mx-auto" max-width="250" title="Login">
