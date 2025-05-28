@@ -220,13 +220,12 @@ function cancelWindow() {
               <!-- ALT: v-for="(checkin, index) in checkInStore.checkins" :key="index"> -->
               <v-row class="d-flex align-center">
                 <v-col class="d-flex" style="flex-grow: 1; width: 100%">
-                  <!-- <RouterLink
+                  <RouterLink
                     :to="'/checkin/' + checkin.checkinPoi.poiId"
                     class="checkInPOITitle"
                   >
                     {{ checkin.checkinPoi.poiTitle }}
-                  </RouterLink> -->
-                  {{ checkin.checkinPoi.poiTitle }}
+                  </RouterLink>
                 </v-col>
                 <v-col cols="auto" class="d-flex justify-start button-group">
                   <v-btn
