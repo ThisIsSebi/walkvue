@@ -59,7 +59,7 @@ const passwordRules = [
         <img
             src="../assets/img/Walkiepedia-Logo-Gross.png"
             lazy-src="https://example.com/placeholder.jpg"
-            width="300px"
+            width="200px"
             height="200px"
             class="rounded-lg"
         ></img>
