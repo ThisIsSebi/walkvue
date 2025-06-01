@@ -31,7 +31,7 @@ import router from "@/router/index.js";
         <v-container class="containerLogin">
           <img
               class="mx-auto"
-              width="300px"
+              width="200px"
               height="200px"
               src="../assets/img/Walkiepedia-Logo-Gross.png"
           ></img>
