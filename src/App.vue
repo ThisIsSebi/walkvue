@@ -6,6 +6,7 @@ import {onMounted} from "vue";
 </script>
 
 <template>
+   
   <v-app>
     <NavBar />
     <v-main>
