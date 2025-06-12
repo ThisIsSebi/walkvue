@@ -6,7 +6,6 @@ import { usePoiStore, useGeoStore } from "@/stores";
 import "leaflet-routing-machine";
 import StandortIcon from "@/assets/img/Standort.png";
 
-
 const props = defineProps({
   radius: {
     type: Number,
@@ -25,14 +24,14 @@ let radiusCircle = null;
 let userMarker;
 
 const userIcon = L.icon({
-  iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
+  iconUrl: "https://walkvue.onrender.com/img/Standort.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
 
 const redIcon = L.icon({
-  iconUrl: "https://walkvue.onrender.com/img/Standort.png", 
+  iconUrl: "https://walkvue.onrender.com/img/Standort.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -72,7 +71,6 @@ function setMapAndRadius(lat, lon) {
   drawRadiusCircle(lat, lon);
 }
 
-
 function handleFallback() {
   const useFallback = window.confirm(
     "Deine Standortbestimmung ist nicht möglich. Möchtest du zufällige Koordinaten verwenden?"
@@ -91,9 +89,10 @@ onMounted(() => {
   map = L.map("map").setView([48.184606, 16.420382], 15);
 
   L.tileLayer(url, {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  subdomains: ['a', 'b', 'c']
-}).addTo(map);
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: ["a", "b", "c"],
+  }).addTo(map);
 
   // Let the DOM settle, then fix map rendering
   setTimeout(() => {
@@ -160,17 +159,17 @@ watch(
       removeRouting();
 
       routingControl = L.Routing.control({
-  waypoints: [
-    L.latLng(userLocation.value.latitude, userLocation.value.longitude),
-    L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
-  ],
-  routeWhileDragging: true,
-  createMarker: function (i, wp) {
-    return L.marker(wp.latLng, {
-      icon: i === 0 ? userIcon : redIcon,
-    });
-  },
-}).addTo(map);
+        waypoints: [
+          L.latLng(userLocation.value.latitude, userLocation.value.longitude),
+          L.latLng(poiStore.poi.latitude, poiStore.poi.longitude),
+        ],
+        routeWhileDragging: true,
+        createMarker: function (i, wp) {
+          return L.marker(wp.latLng, {
+            icon: i === 0 ? userIcon : redIcon,
+          });
+        },
+      }).addTo(map);
 
       routingControl.getContainer().style.display = "none";
     }
@@ -197,9 +196,9 @@ watch(
 
 <style scoped>
 .mapstyle {
-  height: 350px;
+  height: 170px;
   width: 90%;
-  margin: 0 auto;       /* zentriert das Element horizontal */
+  margin: 0 auto; /* zentriert das Element horizontal */
   display: flex;
 }
 </style>
