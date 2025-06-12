@@ -1,11 +1,13 @@
 <script setup>
-
-
-import {watch, onUnmounted, ref, computed} from 'vue';
-import {usePoiStore, useCheckInStore, useAuthStore, usePictureStore, useGeoStore} from "@/stores";
+import { watch, onUnmounted, ref, computed } from "vue";
+import {
+  usePoiStore,
+  useCheckInStore,
+  useAuthStore,
+  usePictureStore,
+  useGeoStore,
+} from "@/stores";
 import Drawer from "@/components/Drawer.vue";
-
-const test = process.env.VUE_APP_TEST;
 
 const authStore = useAuthStore();
 const geoStore = useGeoStore();
@@ -15,14 +17,13 @@ const checkInStore = useCheckInStore();
 
 const lat = ref(null);
 const lon = ref(null);
-const targetLat = ref(null)
-const targetLon = ref(null)
+const targetLat = ref(null);
+const targetLon = ref(null);
 const radius = ref(200);
 const intervalId = ref(null);
 const clickedSave = ref(false);
 const publicCheckin = ref(false);
 const emit = defineEmits(["update:modelValue"]);
-
 
 // Watcher für den Radius, der an die Map und den Poi-Store übergeben wird.
 // Sowie Watcher für die aktuellen Koordinaten (durch Geolocation oder Fallback).
@@ -32,34 +33,37 @@ watch(radius, (newRadius) => {
 });
 
 watch(
-    () => geoStore.fallback,
-    (newVal) => {
-      if (newVal && !lat.value && !lon.value) { // Nur setzen, wenn sie leer sind
-        console.log(`Fallback aktiviert: lat=${geoStore.latitude}, lon=${geoStore.longitude}`);
-        lat.value = geoStore.latitude;
-        lon.value = geoStore.longitude;
-      }
+  () => geoStore.fallback,
+  (newVal) => {
+    if (newVal && !lat.value && !lon.value) {
+      // Nur setzen, wenn sie leer sind
+      console.log(
+        `Fallback aktiviert: lat=${geoStore.latitude}, lon=${geoStore.longitude}`
+      );
+      lat.value = geoStore.latitude;
+      lon.value = geoStore.longitude;
     }
+  }
 );
 
 watch(
-    () => [targetLat.value, targetLon.value],
-    ([lat, lon]) => {
-      if (lat && lon && !intervalId.value) {
-        console.log("🎯 Zielkoordinaten erhalten, starte Intervall!");
+  () => [targetLat.value, targetLon.value],
+  ([lat, lon]) => {
+    if (lat && lon && !intervalId.value) {
+      console.log("🎯 Zielkoordinaten erhalten, starte Intervall!");
 
-        intervalId.value = setInterval(() => {
-          calculateDistanceToPoi();
-        }, 1500);
-      } else if (!lat || !lon) {
-        // Falls kein POI mehr da ist → Intervall stoppen
-        if (intervalId.value) {
-          console.log("⏹️ Keine Zielkoordinaten mehr, stoppe Intervall!");
-          clearInterval(intervalId.value);
-          intervalId.value = null;
-        }
+      intervalId.value = setInterval(() => {
+        calculateDistanceToPoi();
+      }, 1500);
+    } else if (!lat || !lon) {
+      // Falls kein POI mehr da ist → Intervall stoppen
+      if (intervalId.value) {
+        console.log("⏹️ Keine Zielkoordinaten mehr, stoppe Intervall!");
+        clearInterval(intervalId.value);
+        intervalId.value = null;
       }
     }
+  }
 );
 
 // Funktionen zum Anzeigen und Speichern der POIs.
@@ -70,14 +74,15 @@ function loadPoi() {
     return;
   }
 
-  poiStore.loadPoi(lat.value, lon.value, radius.value)
-      .then(() => {
-        targetLat.value = poiStore.poi.latitude;
-        targetLon.value = poiStore.poi.longitude;
-      })
-      .catch(error => {
-        console.error("⚠️ Fehler beim Laden der POIs:", error);
-      });
+  poiStore
+    .loadPoi(lat.value, lon.value, radius.value)
+    .then(() => {
+      targetLat.value = poiStore.poi.latitude;
+      targetLon.value = poiStore.poi.longitude;
+    })
+    .catch((error) => {
+      console.error("⚠️ Fehler beim Laden der POIs:", error);
+    });
 }
 
 // const poiImageUrl = computed(() =>
@@ -92,37 +97,42 @@ function calculateDistanceToPoi() {
     return;
   }
   navigator.geolocation.getCurrentPosition(
-      (position) => {
-        lat.value = position.coords.latitude;
-        lon.value = position.coords.longitude;
-        console.log(`lat=${lat.value}, lon=${lon.value}`);
-        const distance = geoStore.calculateDistance(lat.value, lon.value, targetLat.value, targetLon.value);
-        geoStore.isNear = distance < 500;
-      },
-      (error) => {
-        console.error(error.message)
-      });
+    (position) => {
+      lat.value = position.coords.latitude;
+      lon.value = position.coords.longitude;
+      console.log(`lat=${lat.value}, lon=${lon.value}`);
+      const distance = geoStore.calculateDistance(
+        lat.value,
+        lon.value,
+        targetLat.value,
+        targetLon.value
+      );
+      geoStore.isNear = distance < 500;
+    },
+    (error) => {
+      console.error(error.message);
+    }
+  );
 }
 
 function geoQuery(radius) {
   navigator.geolocation.getCurrentPosition(
-      (position) => {
-        lat.value = position.coords.latitude;
-        lon.value = position.coords.longitude;
-        console.log(`lat=${lat.value}, lon=${lon.value}`);
-        loadPoi();
-      },
-      (error) => {
-        loadPoi();
-      }
-  )
+    (position) => {
+      lat.value = position.coords.latitude;
+      lon.value = position.coords.longitude;
+      console.log(`lat=${lat.value}, lon=${lon.value}`);
+      loadPoi();
+    },
+    (error) => {
+      loadPoi();
+    }
+  );
 }
 
 //
 // function saveCheckin() {
 //   checkInStore.checkinAtPoi(publicCheckin.value);
 // }
-
 
 // function handleSave() {
 //   setTimeout(() =>
@@ -150,12 +160,12 @@ function geoQuery(radius) {
 // )
 // }
 
-  onUnmounted(() => {
-    if (intervalId.value) {
-      clearInterval(intervalId.value);
-      intervalId.value = null; // Interval-ID zurücksetzen
-    }
-  });
+onUnmounted(() => {
+  if (intervalId.value) {
+    clearInterval(intervalId.value);
+    intervalId.value = null; // Interval-ID zurücksetzen
+  }
+});
 //
 // async function closeDialogAndEmptyPoi(isActive) {
 //   await poiStore.emptyPoi();
@@ -166,16 +176,15 @@ function geoQuery(radius) {
 <template>
   <v-container max-width="600px">
     <v-row class="mt-16 mb-10" justify="center">
-Wie weit möchtest du wandern?
-<p>{{ test }}</p>
+      Wie weit möchtest du wandern?
     </v-row>
     <v-row>
       <v-slider
-          v-model="radius"
-          :max="2000"
-          :min="0"
-          :step="10"
-          thumb-label="always"
+        v-model="radius"
+        :max="2000"
+        :min="0"
+        :step="10"
+        thumb-label="always"
       >
         <template v-slot:thumb-label="{ modelValue }">
           {{ modelValue }}m
@@ -183,69 +192,72 @@ Wie weit möchtest du wandern?
       </v-slider>
     </v-row>
     <v-row justify="center">
-          <v-btn @pointerdown="geoQuery(radius); poiStore.drawer = true" elevation="1" color="primary">Auf geht's!</v-btn>
+      <v-btn
+        @pointerdown="
+          geoQuery(radius);
+          poiStore.drawer = true;
+        "
+        elevation="1"
+        color="primary"
+        >Auf geht's!</v-btn
+      >
 
+      <!--      <v-dialog max-width="500" variant="elevated">-->
+      <!--        <template v-slot:activator="{ props: activate }">-->
+      <!--          <v-btn @pointerdown="geoQuery(radius); poiStore.drawer = true" v-bind="activate" elevation="1" color="primary" class="">Go!</v-btn>-->
+      <!--        </template>-->
 
-<!--      <v-dialog max-width="500" variant="elevated">-->
-<!--        <template v-slot:activator="{ props: activate }">-->
-<!--          <v-btn @pointerdown="geoQuery(radius); poiStore.drawer = true" v-bind="activate" elevation="1" color="primary" class="">Go!</v-btn>-->
-<!--        </template>-->
+      <!--        <template v-slot:default="{ isActive }">-->
+      <!--          <v-card>-->
+      <!--            <v-img :src="poiImageUrl"/>-->
+      <!--            <v-card-item>-->
+      <!--              <v-card-title>-->
+      <!--                <v-text-field variant="underlined" loading v-if="!poiStore.poi.title">Please wait, your Point of-->
+      <!--                  Interest is loading...-->
+      <!--                </v-text-field>-->
+      <!--                {{ poiStore.poi.title }}-->
+      <!--              </v-card-title>-->
+      <!--            </v-card-item>-->
+      <!--            <v-card-text>-->
+      <!--              {{ poiStore.poi.body }}<br><br>-->
+      <!--              <strong v-if="poiStore.poi.title"><a target="_blank" :href="poiStore.poi.url">Read More</a></strong>-->
+      <!--            </v-card-text>-->
+      <!--            <v-switch-->
+      <!--                v-model="publicCheckin"-->
+      <!--                color="blue"-->
+      <!--                label="public"-->
+      <!--                hide-details-->
+      <!--                class="switchButton"-->
+      <!--            ></v-switch>-->
+      <!--            &lt;!&ndash;-->
+      <!--            <v-btn color="blue-lighten-2" class="saveButton" @click="handleSave">-->
+      <!--              <v-icon>mdi-book</v-icon>-->
+      <!--            </v-btn>&ndash;&gt;-->
+      <!--            &lt;!&ndash; :disabled="!isNear"&ndash;&gt;-->
+      <!--            <v-btn color="green" @click="handleSave">-->
+      <!--              Check-in-->
+      <!--            </v-btn>-->
+      <!--            <v-btn display="block" @pointerdown="closeDialogAndEmptyPoi(isActive)">Cancel</v-btn>-->
+      <!--            <p v-if="clickedSave" class="updateMessage">{{ checkInStore.updatedMessageCheckIn }}</p>-->
+      <!--            <p v-if="clickedSave">-->
+      <!--              <a>-->
+      <!--                <router-link to="/dashboard" class="goToDashboardMessage">Go to Dashboard</router-link>-->
+      <!--              </a>-->
+      <!--            </p>-->
+      <!--          </v-card>-->
+      <!--        </template>-->
 
-<!--        <template v-slot:default="{ isActive }">-->
-<!--          <v-card>-->
-<!--            <v-img :src="poiImageUrl"/>-->
-<!--            <v-card-item>-->
-<!--              <v-card-title>-->
-<!--                <v-text-field variant="underlined" loading v-if="!poiStore.poi.title">Please wait, your Point of-->
-<!--                  Interest is loading...-->
-<!--                </v-text-field>-->
-<!--                {{ poiStore.poi.title }}-->
-<!--              </v-card-title>-->
-<!--            </v-card-item>-->
-<!--            <v-card-text>-->
-<!--              {{ poiStore.poi.body }}<br><br>-->
-<!--              <strong v-if="poiStore.poi.title"><a target="_blank" :href="poiStore.poi.url">Read More</a></strong>-->
-<!--            </v-card-text>-->
-<!--            <v-switch-->
-<!--                v-model="publicCheckin"-->
-<!--                color="blue"-->
-<!--                label="public"-->
-<!--                hide-details-->
-<!--                class="switchButton"-->
-<!--            ></v-switch>-->
-<!--            &lt;!&ndash;-->
-<!--            <v-btn color="blue-lighten-2" class="saveButton" @click="handleSave">-->
-<!--              <v-icon>mdi-book</v-icon>-->
-<!--            </v-btn>&ndash;&gt;-->
-<!--            &lt;!&ndash; :disabled="!isNear"&ndash;&gt;-->
-<!--            <v-btn color="green" @click="handleSave">-->
-<!--              Check-in-->
-<!--            </v-btn>-->
-<!--            <v-btn display="block" @pointerdown="closeDialogAndEmptyPoi(isActive)">Cancel</v-btn>-->
-<!--            <p v-if="clickedSave" class="updateMessage">{{ checkInStore.updatedMessageCheckIn }}</p>-->
-<!--            <p v-if="clickedSave">-->
-<!--              <a>-->
-<!--                <router-link to="/dashboard" class="goToDashboardMessage">Go to Dashboard</router-link>-->
-<!--              </a>-->
-<!--            </p>-->
-<!--          </v-card>-->
-<!--        </template>-->
-
-<!--      </v-dialog>-->
-
-
+      <!--      </v-dialog>-->
     </v-row>
   </v-container>
 
   <drawer />
-
 </template>
 
 <style scoped>
-
 .colorButtonPOI {
   background-color: #ff9900;
-  font-size: 1.0rem;
+  font-size: 1rem;
 }
 
 .switchButton {

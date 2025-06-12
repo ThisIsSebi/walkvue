@@ -24,10 +24,7 @@ export const useAuthStore = defineStore("auth", {
       this.error = null;
 
       return axios
-        .post(
-          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/register",
-          { username, email, password }
-        ) // Return the promise
+        .post(`/api/auth/register`, { username, email, password }) // Return the promise
         .then((response) => {
           this.user = response.data;
           console.log("Erfolgreich registriert:", this.user);
@@ -54,13 +51,10 @@ export const useAuthStore = defineStore("auth", {
     },
     login(username, password) {
       axios
-        .post(
-          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/login",
-          {
-            username: username,
-            password: password,
-          }
-        )
+        .post(`/api/auth/login`, {
+          username: username,
+          password: password,
+        })
         .then((response) => {
           const data = response.data;
           console.log("Empfangene Daten:", data); // Debugging
@@ -98,9 +92,7 @@ export const useAuthStore = defineStore("auth", {
     },
     getAllUsers() {
       axios
-        .get(
-          "https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/allUsers"
-        )
+        .get(`/api/auth/allUsers`)
         .then((response) => {
           const data = response.data;
           console.log("Empfangene Daten:", data); // Debugging
@@ -120,9 +112,7 @@ export const useAuthStore = defineStore("auth", {
       console.log(userId);
 
       axios
-        .delete(
-          `https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/deleteUser/${userId}`
-        )
+        .delete(`/api/auth/deleteUser/${userId}`)
         .then((response) => {
           console.log("Benutzer erfolgreich gelöscht:", response.data);
 
@@ -142,15 +132,11 @@ export const useAuthStore = defineStore("auth", {
       console.log(updatedUser);
 
       axios
-        .put(
-          `https://walkiepedia-backend-bcfdcbe6cde7d3he.westeurope-01.azurewebsites.net/api/auth/editUser/${id}`,
-          updatedUser,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .put(`/api/auth/editUser/${id}`, updatedUser, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           this.updatedMessage = "User is edited!";
           console.log("Empfangene Daten:", response.data); // Debugging
