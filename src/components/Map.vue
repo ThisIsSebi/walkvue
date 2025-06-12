@@ -197,7 +197,9 @@ watch(
 
 <style scoped>
 .mapstyle {
-  height: 500px;
-  width: 100%;
+  height: 350px;
+  width: 90%;
+  margin: 0 auto;       /* zentriert das Element horizontal */
+  display: flex;
 }
 </style>
